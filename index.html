@@ -1,230 +1,252 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SamLux Shop</title>
-  <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#f9f9f9; }
-    header {
-      display:flex; justify-content:space-between; align-items:center;
-      background:#111; color:#fff; padding:10px 20px;
-      position:sticky; top:0; z-index:1000;
-    }
-    header .logo { font-size:22px; font-weight:bold; text-align:center; flex:1; }
-    header .actions { display:flex; gap:15px; align-items:center; }
-    header a, header button {
-      color:#fff; background:none; border:none; cursor:pointer;
-      font-size:14px; text-decoration:none;
-    }
-    header a:hover, header button:hover { color:#f0a500; }
-    .icon { font-size:18px; }
-    main { padding:20px; text-align:center; }
-    .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:20px; }
-    .product {
-      background:#fff; border:1px solid #ddd; padding:10px; border-radius:8px;
-    }
-    .product img { width:100%; border-radius:5px; }
-    .btn { background:#111; color:#fff; padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
-    .btn:hover { background:#f0a500; color:#111; }
-    footer { margin-top:30px; padding:15px; background:#111; color:#fff; text-align:center; }
-    .back-btn { display:inline-block; margin:15px 0; cursor:pointer; color:#111; }
-    .success { background:#d4edda; color:#155724; padding:10px; margin:10px auto; border-radius:5px; width:80%; display:none; }
-    .details, .checkout { background:#fff; border:1px solid #ddd; padding:20px; border-radius:10px; margin:20px auto; max-width:400px; text-align:right; }
-    .details img { width:100%; border-radius:10px; margin-bottom:15px; }
-    select, input, textarea { width:100%; padding:8px; margin:8px 0; border:1px solid #ccc; border-radius:5px; }
-  </style>
+<meta charset="UTF-8">
+<title>SamLux - متجر شامل</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin:0; padding:0;
+  background: linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a18cd1,#fbc2eb);
+  background-size:400% 400%;
+  animation: gradientBG 12s ease infinite;
+}
+@keyframes gradientBG {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.page{display:none; padding:20px; max-width:600px; margin:auto;}
+.active{display:block;}
+
+input, select, textarea, button{width:100%; padding:10px; margin:6px 0; border-radius:6px; border:1px solid #ccc;}
+button{cursor:pointer; background:#222; color:white; border:none;}
+button:hover{background:#444;}
+a{color:#222; cursor:pointer; text-decoration:underline;}
+
+#cartItems li{margin:6px 0; display:flex; justify-content:space-between; align-items:center;}
+#cartItems li button{margin-left:6px; padding:4px; background:#f55; border:none; color:#fff; border-radius:4px; cursor:pointer;}
+
+.product{background:rgba(255,255,255,0.9); padding:12px; border-radius:10px; margin:10px 0;}
+.cart-item{animation:addToCartAnim 0.36s ease-out;}
+@keyframes addToCartAnim{0%{transform:scale(0.95);opacity:0}100%{transform:scale(1);opacity:1;}}
+
+#successMsg{display:none; background:#d4edda; color:#155724; padding:10px; border-radius:6px; margin-top:10px; text-align:center;}
+#orderLogo{display:none; text-align:center; margin-top:10px;}
+#orderLogo img{max-width:120px;}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="actions">
-    <button title="تبديل اللغة">🌐</button>
-    <a href="#signup">📝</a>
-    <a href="#cart">🛒</a>
-  </div>
-  <div class="logo">SamLux</div>
-  <div class="actions">
-    <a href="#contact">📞</a>
-  </div>
-</header>
+<!-- صفحة التسجيل -->
+<div id="signupPage" class="page">
+  <h2>✍️ إنشاء حساب</h2>
+  <input id="signupName" type="text" placeholder="الاسم الكامل" required>
+  <input id="signupEmail" type="email" placeholder="البريد الإلكتروني" required>
+  <input id="signupPassword" type="password" placeholder="كلمة المرور" required>
+  <button onclick="signup()">إنشاء حساب</button>
+  <p>لديك حساب؟ <a onclick="showPage('loginPage')">تسجيل دخول</a></p>
+</div>
 
-<main>
-  <h2>منتجاتنا</h2>
-  <div class="products">
-    <div class="product">
-      <img src="image/parfum.jpg" alt="عطر اصلي ">
-      <p> عطر اصلي </p>
-      <p>السعر: 20 د.ت</p>
-      <a href="#details" class="btn">تفاصيل</a>
+<!-- صفحة تسجيل الدخول -->
+<div id="loginPage" class="page">
+  <h2>🔐 تسجيل دخول</h2>
+  <input id="loginEmail" type="email" placeholder="البريد الإلكتروني" required>
+  <input id="loginPassword" type="password" placeholder="كلمة المرور" required>
+  <button onclick="login()">دخول</button>
+  <p>ليس لديك حساب؟ <a onclick="showPage('signupPage')">إنشاء حساب</a></p>
+</div>
+
+<!-- صفحة المتجر -->
+<div id="storePage" class="page">
+  <header style="display:flex;justify-content:space-between; align-items:center;">
+    <h2>🛍️ SamLux</h2>
+    <div>
+      <span id="welcomeMsg"></span>
+      <button onclick="showPage('profilePage')">👤 ملفي</button>
+      <button onclick="logout()">🚪 خروج</button>
     </div>
-    <div class="product">
-      <img src="image/pull.png" alt="Product 2">
-      <p>pull</p>
-      <p>السعر: 50 د.ت</p>
-      <a href="#details" class="btn">تفاصيل</a>
-    </div>
-  </div>
+  </header>
 
-  <div><span class="back-btn" onclick="history.back()">⬅ رجوع</span></div>
-
-  <!-- تفاصيل منتج -->
-  <section id="details" style="margin-top:40px;">
-    <div class="details">
-      <img src="https://via.placeholder.com/400" alt="Product detail">
-      <h3 id="prodName">قميص عصري</h3>
-      <p><strong>السعر: <span id="prodPrice">50</span> د.ت</strong></p>
-      <p>الحالة: <span style="color:green;">✅ متوفر</span></p>
-
+  <section id="productsList">
+    <div class="product" data-has-size="false">
+      <h3 class="p-name">عطر فاخر</h3>
+      <p>السعر: <strong class="p-price">50</strong> د.ت</p>
       <label>الكمية:</label>
-      <input type="number" id="prodQty" min="1" value="1">
+      <input type="number" class="p-qty" value="1" min="1">
+      <button onclick="addToCartFromElem(this)">🛒 أضف للسلة</button>
+    </div>
 
+    <div class="product" data-has-size="true">
+      <h3 class="p-name">تيشرت كاجوال</h3>
+      <p>السعر: <strong class="p-price">35</strong> د.ت</p>
       <label>المقاس:</label>
-      <select id="prodSize">
-        <option>S</option>
-        <option>M</option>
-        <option>L</option>
-        <option>XL</option>
-      </select>
-
+      <select class="p-size"><option>S</option><option selected>M</option><option>L</option></select>
       <label>اللون:</label>
-      <select id="prodColor">
-        <option>أبيض</option>
-        <option>أسود</option>
-        <option>أحمر</option>
-        <option>أزرق</option>
-      </select>
-
-      <button class="btn" onclick="addToCart()">🛒 أضف إلى السلة</button>
-      <div><span class="back-btn" onclick="history.back()">⬅ رجوع</span></div>
+      <select class="p-color"><option>أسود</option><option>أبيض</option><option>أخضر</option></select>
+      <label>الكمية:</label>
+      <input type="number" class="p-qty" value="1" min="1">
+      <button onclick="addToCartFromElem(this)">🛒 أضف للسلة</button>
     </div>
   </section>
 
-  <!-- تسجيل -->
-  <section id="signup" style="margin-top:40px;">
-    <h3>إنشاء حساب</h3>
-    <form onsubmit="event.preventDefault(); showSuccess();">
-      <input type="text" placeholder="الاسم الكامل" required><br><br>
-      <input type="email" placeholder="البريد الإلكتروني" required><br><br>
-      <input type="password" placeholder="كلمة السر" required><br><br>
-      <button class="btn">تسجيل</button>
+  <section>
+    <h3>🧾 سلة المشتريات</h3>
+    <ul id="cartItems"></ul>
+  </section>
+
+  <div class="checkout">
+    <form onsubmit="event.preventDefault(); sendOrder();">
+      <label>الاسم الكامل:</label>
+      <input id="custName" type="text" required>
+      <label>العنوان:</label>
+      <textarea id="custAddress" required></textarea>
+      <label>رقم الهاتف:</label>
+      <input id="custPhone" type="text" required>
+      <button>📲 إرسال الطلب عبر واتساب</button>
     </form>
-    <div id="successMsg" class="success">✅ تم إنشاء حسابك بنجاح</div>
-  </section>
+    <div id="successMsg">✅ تم إرسال طلبك! سنتواصل معك قريبًا.</div>
+    <div id="orderLogo"><img src="logo.png" alt="شعار SamLux"></div>
+  </div>
 
-  <!-- السلة -->
-  <section id="cart" style="margin-top:40px;">
-    <h3>🛒 سلة المشتريات</h3>
-    <ul id="cartItems"><li>سلتك فارغة حاليا.</li></ul>
-    <a href="#checkout" class="btn">إتمام الطلب ✅</a>
-  </section>
-
-  <!-- Checkout -->
-  <section id="checkout" style="margin-top:40px;">
-    <h3>إتمام الطلب</h3>
-    <div class="checkout">
-      <form onsubmit="event.preventDefault(); sendOrder();">
-        <label>الاسم الكامل:</label>
-        <input type="text" id="custName" required>
-
-        <label>العنوان:</label>
-        <textarea id="custAddress" required></textarea>
-
-        <label>رقم الهاتف:</label>
-        <input type="text" id="custPhone" required>
-
-        <button class="btn">📲 إرسال الطلب عبر واتساب</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- تواصل -->
-  <section id="contact" style="margin-top:40px;">
+  <section>
     <h3>تواصل معنا</h3>
-    <p>📞 عبر واتساب: <a href="https://wa.me/21629659141">+216 29659141</a></p>
+    <p>📞 واتساب: <a href="https://wa.me/21629659141" target="_blank">+216 29659141</a></p>
     <p>🚚 التوصيل عبر البريد السريع</p>
   </section>
-</main>
+</div>
 
-<footer>
-  <p>SamLux - متجر لبيع الملابس والإكسسوارات أونلاين © 2025</p>
-</footer>
+<!-- صفحة الملف الشخصي -->
+<div id="profilePage" class="page">
+  <h2>👤 ملفي الشخصي</h2>
+  <p id="userName">الاسم: -</p>
+  <p id="userEmail">الإيميل: -</p>
+  <button onclick="showPage('storePage')">🏬 المتجر</button>
+  <button onclick="logout()">🚪 خروج</button>
+</div>
 
 <script>
-  function showSuccess() {
-    document.getElementById("successMsg").style.display = "block";
-  }
+// ====== التنقل بين الصفحات ======
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
 
-  document.addEventListener("DOMContentLoaded", loadCart);
+// ====== تسجيل حساب ======
+function signup(){
+  const name=document.getElementById('signupName').value.trim();
+  const email=document.getElementById('signupEmail').value.trim();
+  const pass=document.getElementById('signupPassword').value;
+  if(!name||!email||!pass){ alert('املأ جميع الحقول'); return; }
+  localStorage.setItem('user', JSON.stringify({name,email,pass}));
+  alert('تم إنشاء الحساب ✅');
+  showPage('loginPage');
+}
 
-  function addToCart() {
-    let name = document.getElementById("prodName").innerText;
-    let price = document.getElementById("prodPrice").innerText;
-    let qty = document.getElementById("prodQty").value;
-    let size = document.getElementById("prodSize").value;
-    let color = document.getElementById("prodColor").value;
-
-    let item = { name, price, qty, size, color };
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(item);
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("تمت إضافة المنتج إلى السلة 🛒");
+// ====== تسجيل دخول ======
+function login(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const user=JSON.parse(localStorage.getItem('user'));
+  if(user && email===user.email && pass===user.pass){
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    document.getElementById('welcomeMsg').innerText='مرحبا '+user.name;
+    showPage('storePage');
     loadCart();
-  }
+  } else alert('❌ البريد أو كلمة المرور غير صحيحة');
+}
 
-  function loadCart() {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let cartItems = document.getElementById("cartItems");
-    cartItems.innerHTML = "";
+// ====== تسجيل خروج ======
+function logout(){
+  localStorage.removeItem('loggedInUser');
+  showPage('loginPage');
+}
 
-    if (cart.length === 0) {
-      cartItems.innerHTML = "<li>سلتك فارغة حاليا.</li>";
-    } else {
-      cart.forEach((item, index) => {
-        cartItems.innerHTML += `<li>${item.qty} × ${item.name} (${item.size}, ${item.color}) - ${item.price} د.ت 
-          <button onclick="removeItem(${index})">❌</button></li>`;
-      });
-    }
-  }
+// ====== السلة ======
+function addToCartFromElem(btn){
+  const card=btn.closest('.product');
+  const name=card.querySelector('.p-name').innerText;
+  const price=parseFloat(card.querySelector('.p-price').innerText);
+  const qty=parseInt(card.querySelector('.p-qty').value)||1;
+  const hasSize=card.getAttribute('data-has-size')==='true';
+  const size=hasSize?card.querySelector('.p-size').value:null;
+  const color=hasSize?card.querySelector('.p-color').value:null;
+  const item={name,price,qty,size,color};
+  const cart=JSON.parse(localStorage.getItem('cart'))||[];
+  cart.push(item);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert('تمت إضافة المنتج 🛒');
+  loadCart();
+}
 
-  function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
+function loadCart(){
+  const cart=JSON.parse(localStorage.getItem('cart'))||[];
+  const list=document.getElementById('cartItems');
+  list.innerHTML='';
+  if(cart.length===0){ list.innerHTML='<li>سلتك فارغة</li>'; return; }
+  let total=0;
+  cart.forEach((item,idx)=>{
+    total += item.price*item.qty;
+    const sizeText=item.size?item.size:'بدون مقاس';
+    const colorText=item.color?item.color:'بدون لون';
+    const li=document.createElement('li');
+    li.className='cart-item';
+    li.innerHTML=`<span>${item.qty} × ${item.name} (${sizeText}, ${colorText}) - ${item.price} د.ت</span>
+                  <button onclick="removeItem(${idx})">❌</button>`;
+    list.appendChild(li);
+  });
+  const liTotal=document.createElement('li');
+  liTotal.innerHTML=`<strong>المجموع: ${total.toFixed(2)} د.ت</strong>`;
+  list.appendChild(liTotal);
+}
+
+function removeItem(idx){
+  const cart=JSON.parse(localStorage.getItem('cart'))||[];
+  cart.splice(idx,1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  loadCart();
+}
+
+// ====== إرسال الطلب عبر واتساب ======
+function sendOrder(){
+  const cart=JSON.parse(localStorage.getItem('cart'))||[];
+  if(cart.length===0){ alert('سلتك فارغة'); return; }
+  const name=document.getElementById('custName').value.trim();
+  const address=document.getElementById('custAddress').value.trim();
+  const phone=document.getElementById('custPhone').value.trim();
+  if(!name||!address||!phone){ alert('املأ جميع الحقول'); return; }
+
+  let order=`🛍️ طلب جديد من SamLux\n\n👤 الاسم: ${name}\n📍 العنوان: ${address}\n📞 الهاتف: ${phone}\n\n📦 المنتجات:\n`;
+  cart.forEach((it,i)=>{
+    const s=it.size?it.size:'بدون مقاس';
+    const c=it.color?it.color:'بدون لون';
+    order+=`${i+1}. ${it.qty} × ${it.name} (${s}, ${c}) - ${it.price} د.ت\n`;
+  });
+
+  const waUrl='https://wa.me/21629659141?text='+encodeURIComponent(order);
+  window.open(waUrl,'_blank');
+
+  localStorage.removeItem('cart');
+  loadCart();
+  document.getElementById
+  document.getElementById('successMsg').style.display = 'block';
+  document.getElementById('orderLogo').style.display = 'block';
+  // مسح الحقول
+  document.getElementById('custName').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('custPhone').value = '';
+}
+
+// ====== تحميل الصفحة ======
+document.addEventListener('DOMContentLoaded', () => {
+  const user = JSON.parse(localStorage.getItem('loggedInUser'));
+  if(user){
+    document.getElementById('welcomeMsg').innerText = 'مرحبا ' + user.name;
+    showPage('storePage');
     loadCart();
+    document.getElementById('userName').innerText = 'الاسم: ' + user.name;
+    document.getElementById('userEmail').innerText = 'الإيميل: ' + user.email;
+  } else {
+    showPage('signupPage'); // صفحة افتراضية إذا لم يوجد مستخدم
   }
-
-  function sendOrder() {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (cart.length === 0) {
-      alert("سلتك فارغة!");
-      return;
-    }
-
-    let name = document.getElementById("custName").value;
-    let address = document.getElementById("custAddress").value;
-    let phone = document.getElementById("custPhone").value;
-
-    let orderDetails = "🛍️ طلب جديد من SamLux\n\n";
-    orderDetails += "👤 الاسم: " + name + "\n";
-    orderDetails += "📍 العنوان: " + address + "\n";
-    orderDetails += "📞 الهاتف: " + phone + "\n\n";
-    orderDetails += "📦 المنتجات:\n";
-
-    cart.forEach((item, i) => {
-      orderDetails += `${i+1}. ${item.qty} × ${item.name} (${item.size}, ${item.color}) - ${item.price} د.ت\n`;
-    });
-
-    let url = "https://wa.me/21629659141?text=" + encodeURIComponent(orderDetails);
-    window.open(url, "_blank");
-
-    // إفراغ السلة بعد الإرسال
-    localStorage.removeItem("cart");
-    loadCart();
-  }
+});
 </script>
-
 </body>
-  </html>
+</html>
