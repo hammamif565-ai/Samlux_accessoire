@@ -67,26 +67,177 @@ a{color:#222; cursor:pointer; text-decoration:underline;}
 
   <section id="productsList">
     <div class="product" data-has-size="false">
-      <h3 class="p-name">عطر فاخر</h3>
-      <p>السعر: <strong class="p-price">50</strong> د.ت</p>
-      <label>الكمية:</label>
-      <input type="number" class="p-qty" value="1" min="1">
-      <button onclick="addToCartFromElem(this)">🛒 أضف للسلة</button>
-    </div>
+  <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SamLux - متجر العطور والموضة</title>
+<style>
+  body { font-family: 'Cairo', sans-serif; background:#fafafa; margin:0; padding:0; text-align:center; }
+  header { background:#111; color:white; padding:15px 0; font-size:22px; font-weight:bold; letter-spacing:1px; }
+  .container { display:flex; flex-wrap:wrap; justify-content:center; padding:20px; gap:20px; }
+  .card { background:white; border-radius:12px; width:220px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden; transition:0.3s; }
+  .card:hover { transform:translateY(-5px); }
+  .card img { width:100%; height:220px; object-fit:cover; }
+  .card h3 { margin:10px 0; color:#333; font-size:18px; }
+  .p-price { color:#d6336c; font-weight:bold; }
+  .p-qty, .p-size, .p-color { margin:5px 0; padding:5px; border-radius:6px; border:1px solid #ccc; width:80%; }
+  button { background:#111; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; transition:0.3s; }
+  button:hover { background:#d6336c; }
+  ul { list-style:none; padding:0; }
+  li.cart-item { display:flex; justify-content:space-between; align-items:center; margin:5px 0; background:#fff; padding:8px; border-radius:8px; box-shadow:0 0 4px rgba(0,0,0,0.1); }
+  #cartBox { background:#fff; margin:20px auto; width:90%; max-width:400px; border-radius:12px; padding:15px; box-shadow:0 2px 8px rgba(0,0,0,0.1); text-align:right; }
+  input { width:90%; padding:8px; margin:5px 0; border-radius:8px; border:1px solid #ccc; }
+  #successMsg { display:none; color:green; font-weight:bold; margin-top:10px; }
+</style>
+</head>
+<body>
 
-    <div class="product" data-has-size="true">
-      <img src="https://github.com/hammamif565-ai/Samlux_accessoire/blob/9d57de3a1e56965089bdbe57a0f412c11294de34/1761168109479.jpg" alt="pull " width="500">
-    
-      <h3 class="p-name"> pull</h3>
-      <p>السعر: <strong class="p-price">35</strong> د.ت</p>
-      <label>المقاس:</label>
-      <select class="p-size"><option>S</option><option selected>M</option><option>L</option></select>
-      <label>اللون:</label>
-      <select class="p-color"><option>أسود</option><option>أبيض</option><option>أخضر</option></select>
-      <label>الكمية:</label>
-      <input type="number" class="p-qty" value="1" min="1">
-      <button onclick="addToCartFromElem(this)">🛒 أضف للسلة</button>
-    </div>
+<header>🛍️ SamLux - عالم العطور والموضة</header>
+
+<div class="container" id="store">
+  <!-- عطر -->
+  <div class="card" data-has-size="false">
+    <img src="https://images.unsplash.com/photo-1600185365483-26d7a4a34cdb?w=500" alt="عطر فاخر">
+    <h3 class="p-name">عطر SamLux Royal</h3>
+    <p class="p-price">75.00</p>
+    <input type="number" class="p-qty" value="1" min="1">
+    <button onclick="addToCart(this.parentElement)">إضافة للسلة</button>
+  </div>
+
+  <!-- قميص -->
+  <div class="card" data-has-size="true">
+    <img src="https://images.unsplash.com/photo-1520975918318-3f4f2f1b727f?w=500" alt="قميص أبيض">
+    <h3 class="p-name">قميص أبيض كلاسيكي</h3>
+    <p class="p-price">45.00</p>
+    <select class="p-size">
+      <option>S</option><option>M</option><option>L</option><option>XL</option>
+    </select>
+    <select class="p-color">
+      <option>أبيض</option><option>أسود</option><option>أزرق</option>
+    </select>
+    <input type="number" class="p-qty" value="1" min="1">
+    <button onclick="addToCart(this.parentElement)">إضافة للسلة</button>
+  </div>
+
+  <!-- ساعة -->
+  <div class="card" data-has-size="false">
+    <img src="https://images.unsplash.com/photo-1511389026070-a14ae610a1be?w=500" alt="ساعة أنيقة">
+    <h3 class="p-name">ساعة SamLux Gold</h3>
+    <p class="p-price">120.00</p>
+    <input type="number" class="p-qty" value="1" min="1">
+    <button onclick="addToCart(this.parentElement)">إضافة للسلة</button>
+  </div>
+
+  <!-- نظارات -->
+  <div class="card" data-has-size="false">
+    <img src="https://images.unsplash.com/photo-1585386959984-a415522316e2?w=500" alt="نظارات">
+    <h3 class="p-name">نظارات SamLux</h3>
+    <p class="p-price">65.00</p>
+    <input type="number" class="p-qty" value="1" min="1">
+    <button onclick="addToCart(this.parentElement)">إضافة للسلة</button>
+  </div>
+
+  <!-- حقيبة -->
+  <div class="card" data-has-size="false">
+    <img src="https://images.unsplash.com/photo-1603808033192-082d6919d1d7?w=500" alt="حقيبة جلدية">
+    <h3 class="p-name">حقيبة جلدية فاخرة</h3>
+    <p class="p-price">90.00</p>
+    <input type="number" class="p-qty" value="1" min="1">
+    <button onclick="addToCart(this.parentElement)">إضافة للسلة</button>
+  </div>
+</div>
+
+<!-- السلة -->
+<div id="cartBox">
+  <h3>🛒 سلتك</h3>
+  <ul id="cartItems"></ul>
+  <hr>
+  <input type="text" id="custName" placeholder="الاسم الكامل">
+  <input type="text" id="custAddress" placeholder="العنوان">
+  <input type="tel" id="custPhone" placeholder="رقم الهاتف">
+  <button onclick="sendOrder()">إرسال الطلب عبر واتساب</button>
+  <div id="successMsg">✅ تم إرسال الطلب بنجاح!</div>
+</div>
+
+<script>
+function addToCart(card){
+  const name = card.querySelector('.p-name').innerText;
+  const price = parseFloat(card.querySelector('.p-price').innerText);
+  const qty = parseInt(card.querySelector('.p-qty').value)||1;
+  const hasSize = card.getAttribute('data-has-size') === 'true';
+  const size = hasSize ? card.querySelector('.p-size').value : null;
+  const color = hasSize ? card.querySelector('.p-color').value : null;
+  const item = { name, price, qty, size, color };
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push(item);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert('تمت إضافة المنتج 🛒');
+  loadCart();
+}
+
+function loadCart(){
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const list = document.getElementById('cartItems');
+  list.innerHTML = '';
+  if(cart.length===0){ list.innerHTML='<li>سلتك فارغة</li>'; return; }
+  let total = 0;
+  cart.forEach((item, idx) => {
+    total += item.price * item.qty;
+    const sizeText = item.size ? item.size : 'بدون مقاس';
+    const colorText = item.color ? item.color : 'بدون لون';
+    const li = document.createElement('li');
+    li.className='cart-item';
+    li.innerHTML = `<span>${item.qty} × ${item.name} (${sizeText}, ${colorText}) - ${item.price} د.ت</span>
+                    <button onclick="removeItem(${idx})">❌</button>`;
+    list.appendChild(li);
+  });
+  const liTotal = document.createElement('li');
+  liTotal.innerHTML = `<strong>المجموع: ${total.toFixed(2)} د.ت</strong>`;
+  list.appendChild(liTotal);
+}
+
+function removeItem(idx){
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.splice(idx,1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  loadCart();
+}
+
+function sendOrder(){
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if(cart.length===0){ alert('سلتك فارغة'); return; }
+  const name = document.getElementById('custName').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  if(!name || !address || !phone){ alert('املأ جميع الحقول'); return; }
+
+  let order = `🛍️ طلب جديد من SamLux\n\n👤 الاسم: ${name}\n📍 العنوان: ${address}\n📞 الهاتف: ${phone}\n\n📦 المنتجات:\n`;
+  cart.forEach((it,i)=>{
+    const s=it.size?it.size:'بدون مقاس';
+    const c=it.color?it.color:'بدون لون';
+    order+=`${i+1}. ${it.qty} × ${it.name} (${s}, ${c}) - ${it.price} د.ت\n`;
+  });
+
+  const waUrl = 'https://wa.me/21629659141?text=' + encodeURIComponent(order);
+  window.open(waUrl,'_blank');
+
+  localStorage.removeItem('cart');
+  loadCart();
+  document.getElementById('successMsg').style.display = 'block';
+  document.getElementById('custName').value = '';
+  document.getElementById('custAddress').value = '';
+  document.getElementById('custPhone').value = '';
+}
+
+// تحميل السلة عند فتح الصفحة
+document.addEventListener('DOMContentLoaded', loadCart);
+</script>
+
+</body>
+</html>
+
     
   </section>
 
